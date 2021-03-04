@@ -1,0 +1,39 @@
+```{r}
+#install.packages('readxl')
+library('readxl')
+data <- readxl::read_xlsx('GSS.xlsx')
+```
+
+<h1>Question 3</h1>
+```{r}
+summary(data)
+
+head(data)
+df <- data.frame(
+  year=data$`Gss year for this respondent`,
+  happy=data$`General happiness`,
+  party=data$`Political party affiliation`,
+  income=data$`Total family income`,
+  race=data$`Race of respondent`,
+  sex=data$`Respondents sex`,
+  school=data$`Highest year of school completed`,
+  mstatus=data$`Marital status`,
+  id=data$`Respondent id number`,
+  ballot=data$`Ballot used for interview`
+)
+```
+```{r}
+head(df)
+#install.packages('dplyr')
+library('dplyr')
+
+arrange(df, happy)
+
+happy <- filter(df, happy=="Very Happy")
+happy
+#unsure <-
+#not_happy <-
+```
+
+
+
