@@ -56,3 +56,18 @@ ggplot(q6qf, aes(y=Happiness, x=Income)) + geom_bar(stat = "identity") + theme(a
 ```{r}
 q6qf
 ```
+
+3.
+It seems that those who are married tend to be "Very Happy" or just happy overall. Most people seem to be married and a majority in that category are happy. We can see the few that are separated do not seem to be too happy and those who are divorced are also not as happy as those who are married. There also seems to be more unhappy non-married people than there are unhappy married people.
+```{r}
+happy_df <- as.data.frame(df)
+unique(df$happy)
+unique(df$mstatus)
+isHappy_df <- filter(happy_df, happy!="No answer"
+                   && happy!="Not applicable" && happy!="Don't know") 
+isHappy_df <- filter(isHappy_df, mstatus!="No answer")
+```
+```{r}
+mosaicplot(isHappy_df$happy~isHappy_df$mstatus, col=c("red", "blue"))
+mosaicplot(isHappy_df$mstatus~isHappy_df$happy, col=c("red", "blue"))
+```
