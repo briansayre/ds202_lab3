@@ -57,3 +57,4 @@ ggplot(q6qf, aes(y=Happiness, x=Income)) + geom_bar(stat = "identity") + theme(a
 q6qf
 ```
 
+Nice work -Desmond
