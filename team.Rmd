@@ -18,8 +18,10 @@ df <- data.frame(
 str(df)
 ```
 
+
 ### Question 1. 
 <p>I chose to display the data as a boxplot for each marriage status. I chose this to show as mush information about the education for each status as possible. We can see that the ones with no answer seem to have the highest mean education which is something I did not expect. We also can see the rest have around the same mean, but a difference in most of their interquartile ranges. Divorced, married and never married seem to have a higher IQR than separated and widowed.</p>
+
 ```{r}
 q1df <- as.data.frame(df)
 q1df <- filter(q1df, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
@@ -38,7 +40,6 @@ q1df %>%
   )
 ```
 
-
 ### Question 2. 
 ```{r}
 q2df <- q1df %>% 
@@ -46,7 +47,6 @@ q2df <- q1df %>%
   filter(school > mean(school))
 str(q2df)
 ```
-
 
 
 ### Question 3
@@ -177,3 +177,5 @@ ggplot(q6qf, aes(y=happy, x=Income)) + geom_bar(stat = "identity") + theme(axis.
 ```{r}
 q6qf
 ```
+
+
