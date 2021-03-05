@@ -66,3 +66,6 @@ ggplot(data=GSS, aes(x=Race, y=Education))+geom_boxplot()+ggtitle("Race vs. Educ
 ```
 
 The median years of education for both black and white people is about 12 years while the median years of education for the other races is 13 years. Overall, black people tended to have lower education than white people and the other races had the widest range. This could be because the other category includes many other races like latinos and asians. 
+
+
+Good work -Desmond Orton
