@@ -1,0 +1,60 @@
+```{r}
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+data <- readxl::read_xls('./GSS.xls')
+df <- data.frame( year=data$`Gss year for this respondent`, happy=data$`General happiness`, party=data$`Political party affiliation`, income=data$`Total family income`, race=data$`Race of respondent`, sex=data$`Respondents sex`, school=data$`Highest year of school completed`, mstatus=data$`Marital status`, id=data$`Respondent id number`, ballot=data$`Ballot used for interview` ) 
+str(df)
+```
+
+1. 
+I chose to display the data as a boxplot for each marriage status. I chose this to show as mush information about the education for each status as possible. We can see that the ones with no answer seem to have the highest mean education which is something I did not expect. We also can see the rest have around the same mean, but a differnece in most of their interquartile ranges. Divorced, married and never married seem to have a higher IQR than separated and widowed.
+```{r}
+q1df <- as.data.frame(df)
+q1df <- filter(q1df, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
+unique(q1df$school)
+q1df$school <- as.numeric(q1df$school)
+ggplot(q1df, aes(y=school, x=mstatus), fill=school) + geom_boxplot()
+```
+
+```{r}
+q1df %>% 
+  group_by(mstatus) %>% 
+  summarize(
+    mean_rate = mean(school, na.rm=TRUE),
+    sd_rate = sd(school, na.rm=TRUE),
+    nrows = n()
+  )
+```
+
+
+2. 
+```{r}
+q2df <- q1df %>% 
+  group_by(mstatus) %>% 
+  filter(school > mean(school))
+str(q2df)
+```
+
+6b. 
+Does income affect your overall happiness?
+The graph and data show that as a persons income increases the average happiness rating increases. For the data, i used "Not too happy" = 1, "Pretty happy" = 2, "Very happy" = 3. This allowed me to run an average of each person for each income range. Although the happiness slightly increase as income increases, we can see that they are all still right around a 2 average, which is pretty happy.
+
+```{r}
+q6df <- select(df,happy, income)
+q6df <- filter(q6df, happy != "No answer" & happy != "Don't know" & happy != "Not applicable")
+q6df <- filter(q6df, income != "No answer" & income != "Don't know" & income != "Not applicable" & income != "Refused")
+q6df$happyNum <- recode(q6df$happy, "Not too happy" = 1, "Pretty happy" = 2, "Very happy" = 3)
+q6df <- aggregate(q6df$happyNum, by=list(q6df$income), FUN=mean)
+q6qf <- rename(q6df, Income = Group.1, Happiness = x)
+ordered <- c("Lt $1000", "$1000 to 2999", "$3000 to 3999", "$4000 to 4999", "$5000 to 5999", "$6000 to 6999", "$7000 to 7999", "$8000 to 9999", "$10000 - 14999", "$15000 - 19999", "$20000 - 24999", "$25000 or more")
+q6qf$Income <- factor(q6qf$Income, levels=ordered)
+```
+```{r}
+ggplot(q6qf, aes(y=Happiness, x=Income)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = -90))+ ylim(0, 3)
+```
+```{r}
+q6qf
+```
+
+Nice work -Desmond
