@@ -90,11 +90,13 @@ happy_table <- happy_df %>%
   )
 happy_table
 
-ggplot(happy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red") + ggtitle("Happiness by Marital Status")
-ggplot(unhappy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")  + ggtitle("UnHappiness by Marital Status")
+ggplot(happy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red") + ggtitle("Happiness by Marital Status")+xlab("Marital Status")+ylab("Count")
+  
+ggplot(unhappy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")  + ggtitle("Unhappiness by Marital Status")+xlab("Marital Status")+ylab("Count")
 
-mosaicplot(happy_df$happy~happy_df$mstatus, shade=TRUE, las=1, main="Mosaic of Happy to Marital Status")
-mosaicplot(unhappy_df$happy~unhappy_df$mstatus, shade=TRUE, las=1, main="Mosaic of UnHappy to Marital Status")
+mosaicplot(happy_df$happy~happy_df$mstatus, shade=TRUE, las=1, main="Mosaic of Happy to Marital Status", xlab="Happiness", ylab="Marital Status")
+
+mosaicplot(unhappy_df$happy~unhappy_df$mstatus, shade=TRUE, las=1, main="Mosaic of Unhappy to Marital Status", xlab="Happiness", ylab="Marital Status")
 ```
 <p>
 It would seem that there are more people married and happy than there are of any other group. Never married people also seem much happier than divorced, separated, or divorced people. </p>
@@ -160,12 +162,17 @@ t4 <- unhappy_dem_df%>%
   )
 t4
 
-ggplot(happy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red") + ggtitle("Happy Republicans")
-ggplot(unhappy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red") + ggtitle("Unhappy Republicans")
-ggplot(happy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue") + ggtitle("Happy Democrats")
-ggplot(unhappy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue") + ggtitle("Unhappy Democrats")
-ggplot(happy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple") + ggtitle("Happy Independents")
-ggplot(unhappy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple") + ggtitle("Unhappy Independents")
+ggplot(happy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red") + ggtitle("Happy Republicans")+xlab("Party")+ylab("Count")
+
+ggplot(unhappy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red") + ggtitle("Unhappy Republicans")+xlab("Party")+ylab("Count")
+
+ggplot(happy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue") + ggtitle("Happy Democrats")+xlab("Party")+ylab("Count")
+
+ggplot(unhappy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue") + ggtitle("Unhappy Democrats")+xlab("Party")+ylab("Count")
+
+ggplot(happy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple") + ggtitle("Happy Independents")+xlab("Party")+ylab("Count")
+
+ggplot(unhappy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple") + ggtitle("Unhappy Independents")+xlab("Party")+ylab("Count")
 ```
 
 It would seem that there are similar amounts of happy and unhappy democrats as well as happy and unhappy republicans as well as happy and unhappy independents. This would seem to suggest party affiliation is not a factor in happy.
@@ -220,7 +227,7 @@ There are approximately 5 times as many white respondents as the next largest ca
 
 ```{r}
 ##exploring the relationship between race and school
-ggplot(data=q6dfA, aes(x=race, y=school))+geom_boxplot()+ggtitle("Race vs. Education")
+ggplot(data=q6dfA, aes(x=race, y=school))+geom_boxplot()+ggtitle("Race vs. Education")+xlab("Race")+ylab("Education")
 ```
 
 The median years of education for both black and white people is about 12 years while the median years of education for the other races is 13 years. Overall, black people tended to have lower education than white people and the other races had the widest range. This could be because the other category includes other races like latino and asian. 
