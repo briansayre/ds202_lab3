@@ -52,6 +52,57 @@ mosaicplot(isHappy_df$mstatus~isHappy_df$happy, col=c("red", "blue"))
 ```
 
 
+## Problem 5
+```{r}
+q5df <- as.data.frame(df)
+q5df <- filter(q5df, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
+unique(q5df$school)
+q5df$school <- as.numeric(q5df$school)
+```
+
+
+```{r}
+##plot of marital status and education
+ggplot(data=q5df, aes(x=mstatus,y=school))+geom_boxplot()+ggtitle("Marital Status vs. Education")+theme(axis.text.x = element_text(angle = 90))+xlab("Marital Status")
+```
+
+The group with the highest median years of education was the "No Answer" group, while the group with the lowest median years of education was Widowed people. Since the no answer group likely has less respondents than the other groups, they are likely to get more average responses for years of schooling than the other groups.
+
+```{r}
+ggplot(data=q5df, aes(x=mstatus, y=school))+geom_bar(stat = 'identity')+xlab("Marital Status")+ggtitle("Marital Status vs. Total Education Bar Graph")
+```
+
+Overall, the group of married people has the highest total amount of education, distantly followed by the never married group. Since this is the total education though, we can not tell if this is solely due to married people having more education or if there were just many more married people than other groups. This graph also shows that the total education of the No Answer group is much less than the total education for all other groups.
+
+## Problem 6A
+```{r}
+##exploring relationship between race and education
+q6dfA <- select(df, race, school)
+q6dfA <- filter(q6dfA, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
+```
+
+```{r}
+##exploring school variable
+q6dfA$school <- as.numeric(q6dfA$school)
+ggplot(q6dfA, aes(x=school))+geom_bar()+xlab("Education")+ ylab("Count")+ggtitle("Counts of Years of Education")
+```
+
+The most common amount of education of respondents for the study was 12 years of school, which means that more respondents received a high school education than any other number of years of education. The data is skewed to the left with a center around 12 years of education.
+
+```{r}
+##exploring race variable
+ggplot(q6dfA, aes(x=race))+geom_bar()+xlab("Race")+ylab("Count")+ggtitle("Number of Respondents per Race")
+```
+
+There are approximately 5 times as many white respondents as the next largest category (black respondents). The majority of the data collected was from white-identifying people. There is still a sizeable amount of data for both the black and other people.
+
+```{r}
+##exploring the relationship between race and school
+ggplot(data=q6dfA, aes(x=race, y=school))+geom_boxplot()+ggtitle("Race vs. Education")
+```
+
+The median years of education for both black and white people is about 12 years while the median years of education for the other races is 13 years. Overall, black people tended to have lower education than white people and the other races had the widest range. This could be because the other category includes many other races like latinos and asians. 
+
 
 6b.  
 Does income affect your overall happiness?  
