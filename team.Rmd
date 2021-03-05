@@ -90,11 +90,11 @@ happy_table <- happy_df %>%
   )
 happy_table
 
-ggplot(happy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")
-ggplot(unhappy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")
+ggplot(happy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red") + ggtitle("Happiness by Marital Status")
+ggplot(unhappy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")  + ggtitle("UnHappiness by Marital Status")
 
-mosaicplot(happy_df$happy~happy_df$mstatus, shade=TRUE, las=1)
-mosaicplot(unhappy_df$happy~unhappy_df$mstatus, shade=TRUE, las=1)
+mosaicplot(happy_df$happy~happy_df$mstatus, shade=TRUE, las=1, main="Mosaic of Happy to Marital Status")
+mosaicplot(unhappy_df$happy~unhappy_df$mstatus, shade=TRUE, las=1, main="Mosaic of UnHappy to Marital Status")
 ```
 <p>
 It would seem that there are more people married and happy than there are of any other group. Never married people also seem much happier than divorced, separated, or divorced people. </p>
@@ -160,12 +160,12 @@ t4 <- unhappy_dem_df%>%
   )
 t4
 
-ggplot(happy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red")
-ggplot(unhappy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red")
-ggplot(happy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue")
-ggplot(unhappy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue")
-ggplot(happy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple")
-ggplot(unhappy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple")
+ggplot(happy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red") + ggtitle("Happy Republicans")
+ggplot(unhappy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red") + ggtitle("Unhappy Republicans")
+ggplot(happy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue") + ggtitle("Happy Democrats")
+ggplot(unhappy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue") + ggtitle("Unhappy Democrats")
+ggplot(happy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple") + ggtitle("Happy Independents")
+ggplot(unhappy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple") + ggtitle("Unhappy Independents")
 ```
 
 It would seem that there are similar amounts of happy and unhappy democrats as well as happy and unhappy republicans as well as happy and unhappy independents. This would seem to suggest party affiliation is not a factor in happy.
