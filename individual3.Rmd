@@ -1,0 +1,68 @@
+---
+title: "individual3"
+author: "Caitlin Fordell"
+date: "3/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(readxl)
+GSS <- read_excel("C://Users//caitl//Documents//ds202_lab3//GSS.xls")
+head(GSS)
+```
+
+
+
+```{r}
+##renaming the columns
+GSS <- rename(GSS, 'Education'='Highest year of school completed')
+GSS <- rename(GSS, 'Year'='Gss year for this respondent')
+GSS <- rename(GSS, 'Income'='Total family income')
+GSS <- rename(GSS, 'Race' = 'Race of respondent')
+GSS <- rename(GSS, 'Sex' = 'Respondents sex')
+GSS <- rename(GSS, 'Party' = 'Political party affiliation')
+GSS <- rename(GSS, 'Happiness' = 'General happiness')
+GSS <- rename(GSS, 'Marital.status' = 'Marital status')
+GSS <- rename(GSS, 'ID' = 'Respondent id number')
+GSS <- rename(GSS, 'Ballot' = 'Ballot used for interview')
+```
+
+
+## Problem 5
+```{r}
+##finding average education for each marital status
+GSS <- filter(GSS, Education != 'No answer' & Education != "Don't know" & !is.na(Education) & Education != "NA" )
+unique(GSS$Education)
+GSS$Education <- as.numeric(GSS$Education)
+```
+
+```{r}
+##plot of marital status and education
+  
+ggplot(data=GSS, aes(x=Marital.status,y=Education))+geom_boxplot()+ggtitle("Marital Status vs. Education")+theme(axis.text.x = element_text(angle = 90))+xlab("Marital Status")
+```
+
+The group with the highest median years of education was the "No Answer" group, while the group with the lowest median years of education was Widowed people. Since the no answer group likely has less respondents than the other groups, they are likely to get more average reponses for years of schooling than the other groups.
+
+```{r}
+ggplot(data=GSS, aes(x=Marital.status, y=Education))+geom_bar(stat = 'identity')+xlab("Marital Status")+ggtitle("Marital Status vs. Total Education Bar Graph")
+```
+
+Overall, the group of married people has the highest total amount of education, distantly followed by the never married group. Since this is the total education though, we can not tell if this is solely due to married people having more education or if there were just many more married people than other groups. This graph also shows that the total education of the No Answer group is much less than the total education for all other groups.
+
+## Problem 6
+```{r}
+##exploring race and education
+
+ggplot(data=GSS, aes(x=Race, y=Education))+geom_boxplot()+ggtitle("Race vs. Education")
+```
+
+The median years of education for both black and white people is about 12 years while the median years of education for the other races is 13 years. Overall, black people tended to have lower education than white people and the other races had the widest range. This could be because the other category includes many other races like latinos and asians. 
