@@ -7,7 +7,7 @@ df <- data.frame( year=data$`Gss year for this respondent`, happy=data$`General 
 str(df)
 ```
 
-1. 
+1.   
 I chose to display the data as a boxplot for each marriage status. I chose this to show as mush information about the education for each status as possible. We can see that the ones with no answer seem to have the highest mean education which is something I did not expect. We also can see the rest have around the same mean, but a difference in most of their interquartile ranges. Divorced, married and never married seem to have a higher IQR than separated and widowed.
 ```{r}
 q1df <- as.data.frame(df)
@@ -28,7 +28,7 @@ q1df %>%
 ```
 
 
-2. 
+2.  
 ```{r}
 q2df <- q1df %>% 
   group_by(mstatus) %>% 
@@ -36,8 +36,25 @@ q2df <- q1df %>%
 str(q2df)
 ```
 
-6b. 
-Does income affect your overall happiness?
+3.  
+It seems that those who are married tend to be "Very Happy" or just happy overall. Most people seem to be married and a majority in that category are happy. We can see the few that are separated do not seem to be too happy and those who are divorced are also not as happy as those who are married. There also seems to be more unhappy non-married people than there are unhappy married people.
+```{r}
+happy_df <- as.data.frame(df)
+unique(df$happy)
+unique(df$mstatus)
+isHappy_df <- filter(happy_df, happy!="No answer"
+                   && happy!="Not applicable" && happy!="Don't know") 
+isHappy_df <- filter(isHappy_df, mstatus!="No answer")
+```
+```{r}
+mosaicplot(isHappy_df$happy~isHappy_df$mstatus, col=c("red", "blue"))
+mosaicplot(isHappy_df$mstatus~isHappy_df$happy, col=c("red", "blue"))
+```
+
+
+
+6b.  
+Does income affect your overall happiness?  
 The graph and data show that as a persons income increases the average happiness rating increases. For the data, i used "Not too happy" = 1, "Pretty happy" = 2, "Very happy" = 3. This allowed me to run an average of each person for each income range. Although the happiness slightly increase as income increases, we can see that they are all still right around a 2 average, which is pretty happy.
 
 ```{r}
@@ -55,19 +72,4 @@ ggplot(q6qf, aes(y=Happiness, x=Income)) + geom_bar(stat = "identity") + theme(a
 ```
 ```{r}
 q6qf
-```
-
-3.
-It seems that those who are married tend to be "Very Happy" or just happy overall. Most people seem to be married and a majority in that category are happy. We can see the few that are separated do not seem to be too happy and those who are divorced are also not as happy as those who are married. There also seems to be more unhappy non-married people than there are unhappy married people.
-```{r}
-happy_df <- as.data.frame(df)
-unique(df$happy)
-unique(df$mstatus)
-isHappy_df <- filter(happy_df, happy!="No answer"
-                   && happy!="Not applicable" && happy!="Don't know") 
-isHappy_df <- filter(isHappy_df, mstatus!="No answer")
-```
-```{r}
-mosaicplot(isHappy_df$happy~isHappy_df$mstatus, col=c("red", "blue"))
-mosaicplot(isHappy_df$mstatus~isHappy_df$happy, col=c("red", "blue"))
 ```
