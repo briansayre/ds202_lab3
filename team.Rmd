@@ -36,7 +36,7 @@ q1df <- as.data.frame(df)
 q1df <- filter(q1df, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
 unique(q1df$school)
 q1df$school <- as.numeric(q1df$school)
-ggplot(q1df, aes(y=school, x=mstatus), fill=school) + geom_boxplot()
+ggplot(q1df, aes(y=school, x=mstatus), fill=school) + geom_boxplot()+xlab("Marital Status")+ylab("Education")+ggtitle("Marital Status vs. Education")
 ```
 
 ```{r}
@@ -184,13 +184,13 @@ q5df$school <- as.numeric(q5df$school)
 
 ```{r}
 ##plot of marital status and education
-ggplot(data=q5df, aes(x=mstatus,y=school))+geom_boxplot()+ggtitle("Marital Status vs. Education")+theme(axis.text.x = element_text(angle = 90))+xlab("Marital Status")
+ggplot(data=q5df, aes(x=mstatus,y=school))+geom_boxplot()+ggtitle("Marital Status vs. Education")+theme(axis.text.x = element_text(angle = 90))+xlab("Marital Status")+ylab("Education")
 ```
 
 The group with the highest median years of education was the "No Answer" group, while the group with the lowest median years of education was Widowed people. Since the no answer group likely has less respondents than the other groups, they are likely to get more average responses for years of schooling than the other groups.
 
 ```{r}
-ggplot(data=q5df, aes(x=mstatus, y=school))+geom_bar(stat = 'identity')+xlab("Marital Status")+ggtitle("Marital Status vs. Total Education Bar Graph")
+ggplot(data=q5df, aes(x=mstatus, y=school))+geom_bar(stat = 'identity')+xlab("Marital Status")+ggtitle("Marital Status vs. Total Education Bar Graph")+ylab("Education")
 ```
 
 Overall, the group of married people has the highest total amount of education, distantly followed by the never married group. Since this is the total education though, we can not tell if this is solely due to married people having more education or if there were just many more married people than other groups. This graph also shows that the total education of the No Answer group is much less than the total education for all other groups.
@@ -213,7 +213,7 @@ The most common amount of education of respondents for the study was 12 years of
 
 ```{r}
 ##exploring race variable
-ggplot(q6dfA, aes(x=race))+geom_bar()+xlab("Race")+ylab("Count")+ggtitle("Number of Respondents per Race")
+ggplot(q6dfA, aes(x=race))+geom_bar()+xlab("Race")+ylab("Count")+ggtitle("Number of Respondents per Race")+xlab("Race")+ylab("Education")
 ```
 
 There are approximately 5 times as many white respondents as the next largest category (black respondents). The majority of the data collected was from white-identifying people. There is still a sizeable amount of data for both the black and other people.
