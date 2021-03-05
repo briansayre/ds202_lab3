@@ -4,36 +4,135 @@ library('readxl')
 data <- readxl::read_xlsx('GSS.xlsx')
 ```
 
-<h1>Question 3</h1>
 ```{r}
-summary(data)
-
-head(data)
-df <- data.frame(
-  year=data$`Gss year for this respondent`,
-  happy=data$`General happiness`,
-  party=data$`Political party affiliation`,
-  income=data$`Total family income`,
-  race=data$`Race of respondent`,
-  sex=data$`Respondents sex`,
-  school=data$`Highest year of school completed`,
-  mstatus=data$`Marital status`,
-  id=data$`Respondent id number`,
-  ballot=data$`Ballot used for interview`
-)
-```
-```{r}
-head(df)
-#install.packages('dplyr')
 library('dplyr')
-
-arrange(df, happy)
-
-happy <- filter(df, happy=="Very Happy")
-happy
-#unsure <-
-#not_happy <-
+library('tidyverse')
+library('ggplot2')
 ```
 
+```{r}
+str(data)
 
+data <- rename(data, 'Education'='Highest year of school completed')
+data <- rename(data, 'Year'='Gss year for this respondent')
+data <- rename(data, 'Income'='Total family income')
+data <- rename(data, 'Race' = 'Race of respondent')
+data <- rename(data, 'Sex' = 'Respondents sex')
+data <- rename(data, 'Party' = 'Political party affiliation')
+data <- rename(data, 'Happiness' = 'General happiness')
+data <- rename(data, 'Marital.status' = 'Marital status')
+data <- rename(data, 'ID' = 'Respondent id number')
+data <- rename(data, 'Ballot' = 'Ballot used for interview')
 
+str(data)
+```
+### Question 3
+##### How is the happiness of a respondent related to his/her marriage status? Define that a person is happy if the response to question is “Very happy” or “Pretty happy”.
+```{r}
+df <- as.data.frame(data)
+
+happy_df <- df %>% 
+  group_by(Marital.status) %>%
+  filter(Happiness=="Pretty happy" | Happiness=="Very happy") %>%
+  filter(Marital.status!="No answer")
+
+unhappy_df <- df %>%
+  group_by(Marital.status) %>%
+  filter(Happiness=="Not too happy") %>%
+  filter(Marital.status!="No answer")
+
+unhappy_table <- unhappy_df %>%
+  group_by(Marital.status) %>%
+  summarize(
+    Total_Unhappy=n()
+  )
+unhappy_table
+
+happy_table <- happy_df %>%
+  group_by(Marital.status) %>%
+  summarize(
+    Total_Happy=n()
+  )
+happy_table
+
+ggplot(happy_df, aes(x=Marital.status)) + geom_bar(color="blue", fill="red")
+ggplot(unhappy_df, aes(x=Marital.status)) + geom_bar(color="blue", fill="red")
+
+mosaicplot(happy_df$Happiness~happy_df$Marital.status, shade=TRUE, las=1)
+mosaicplot(unhappy_df$Happiness~unhappy_df$Marital.status, shade=TRUE, las=1)
+```
+<h3>Conclusion</h3>
+<p>
+It would seem that there are more people married and happy than there are of any other group. Never married people also seem much happier than divorced, separated, or divorced people. </p>
+
+### Question 4
+##### Does party affiliation affect the relationship you found in the last question?
+```{r}
+unique(happy_df$Party)
+
+happy_indep_df <- happy_df %>%
+  group_by(Marital.status) %>%
+  filter(Party=="Independent" | Party=="Ind,near rep" | Party=="Ind,near dem")
+happy_indep_df
+ti1 <- happy_indep_df %>%
+  summarize(
+    Total_Happy_Indep=n()
+  )
+ti1
+
+unhappy_indep_df <- unhappy_df %>%
+  group_by(Marital.status) %>%
+  filter(Party=="Independent" | Party=="Ind,near rep" | Party=="Ind,near dem")
+unhappy_indep_df
+ti2 <- unhappy_indep_df %>%
+  summarize(
+    Total_Unhappy_Indep=n()
+  )
+ti2
+
+happy_rep_df <- happy_df %>%
+  group_by(Marital.status) %>%
+  filter(Party=="Strong republican" | Party=="Not str republican")
+t1 <- happy_rep_df %>%
+  summarize(
+    Total_Happy_Rep=n()
+  )
+t1
+
+unhappy_rep_df <- unhappy_df %>%
+  group_by(Marital.status) %>%
+  filter(Party=="Strong republican" | Party=="Not str republican")
+t2 <- unhappy_rep_df %>%
+  summarize(
+    Total_Unhappy_Rep=n()
+  )
+t2
+
+happy_dem_df <- happy_df %>%
+  group_by(Marital.status) %>%
+  filter(Party=="Strong democrat" | Party=="Not str democrat")
+t3 <- happy_dem_df %>%
+  summarize(
+    Total_Happy_Dem=n()
+  )
+t3
+
+unhappy_dem_df <- unhappy_df %>%
+  group_by(Marital.status) %>%
+  filter(Party=="Strong democrat" | Party=="Not str democrat")
+t4 <- unhappy_dem_df%>%
+  summarize(
+    Total_Unhappy_Dem=n()
+  )
+t4
+
+ggplot(happy_rep_df, aes(x=Party)) + geom_bar(color="blue", fill="red")
+ggplot(unhappy_rep_df, aes(x=Party)) + geom_bar(color="blue", fill="red")
+ggplot(happy_dem_df, aes(x=Party)) + geom_bar(color="red", fill="blue")
+ggplot(unhappy_dem_df, aes(x=Party)) + geom_bar(color="red", fill="blue")
+ggplot(happy_indep_df, aes(x=Party)) + geom_bar(color="black", fill="purple")
+ggplot(unhappy_indep_df, aes(x=Party)) + geom_bar(color="black", fill="purple")
+```
+<h3>Conclusion</h3>
+<p>
+It would seem that there are similar amounts of happy and unhappy democrats as well as happy and unhappy republicans as well as happy and unhappy independents. This would seem to suggest party affiliation is not a factor in happiness.</p>

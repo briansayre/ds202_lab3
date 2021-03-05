@@ -1,14 +1,36 @@
+---
+title: "Lab 3"
+author: "Brian Sayre, Desmond Orton, Caitlin Fordell"
+date: "3/5/2021"
+output: html_document
+---
+
+
+## Setup
 ```{r}
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
 data <- readxl::read_xls('./GSS.xls')
-df <- data.frame( year=data$`Gss year for this respondent`, happy=data$`General happiness`, party=data$`Political party affiliation`, income=data$`Total family income`, race=data$`Race of respondent`, sex=data$`Respondents sex`, school=data$`Highest year of school completed`, mstatus=data$`Marital status`, id=data$`Respondent id number`, ballot=data$`Ballot used for interview` ) 
+str(data)
+df <- data.frame(
+  year=data$`Gss year for this respondent`, 
+  happy=data$`General happiness`, 
+  party=data$`Political party affiliation`, 
+  income=data$`Total family income`, 
+  race=data$`Race of respondent`, 
+  sex=data$`Respondents sex`, 
+  school=data$`Highest year of school completed`, 
+  mstatus=data$`Marital status`, 
+  id=data$`Respondent id number`, 
+  ballot=data$`Ballot used for interview`) 
 str(df)
 ```
 
-1.   
-I chose to display the data as a boxplot for each marriage status. I chose this to show as mush information about the education for each status as possible. We can see that the ones with no answer seem to have the highest mean education which is something I did not expect. We also can see the rest have around the same mean, but a difference in most of their interquartile ranges. Divorced, married and never married seem to have a higher IQR than separated and widowed.
+
+### Question 1
+Average years of education for respondents with each marital status.
+
 ```{r}
 q1df <- as.data.frame(df)
 q1df <- filter(q1df, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
@@ -27,8 +49,10 @@ q1df %>%
   )
 ```
 
+I chose to display the data as a boxplot for each marriage status. I chose this to show as mush information about the education for each status as possible. We can see that the ones with no answer seem to have the highest mean education which is something I did not expect. We also can see the rest have around the same mean, but a difference in most of their interquartile ranges. Divorced, married and never married seem to have a higher IQR than separated and widowed.
 
-2.  
+### Question 2
+Creating a data frame for better educated respondents for each marital status
 ```{r}
 q2df <- q1df %>% 
   group_by(mstatus) %>% 
@@ -36,29 +60,126 @@ q2df <- q1df %>%
 str(q2df)
 ```
 
-3.  
-It seems that those who are married tend to be "Very Happy" or just happy overall. Most people seem to be married and a majority in that category are happy. We can see the few that are separated do not seem to be too happy and those who are divorced are also not as happy as those who are married. There also seems to be more unhappy non-married people than there are unhappy married people.
+
+### Question 3
+How is happiness related to marital status?
 ```{r}
-happy_df <- as.data.frame(df)
-unique(df$happy)
-unique(df$mstatus)
-isHappy_df <- filter(happy_df, happy!="No answer"
-                   && happy!="Not applicable" && happy!="Don't know") 
-isHappy_df <- filter(isHappy_df, mstatus!="No answer")
+df2 <- as.data.frame(df)
+str(df2)
+happy_df <- df2 %>% 
+  group_by(mstatus) %>%
+  filter(happy=="Pretty happy" | happy=="Very happy") %>%
+  filter(mstatus!="No answer")
+
+unhappy_df <- df2 %>%
+  group_by(mstatus) %>%
+  filter(happy=="Not too happy") %>%
+  filter(mstatus!="No answer")
+
+unhappy_table <- unhappy_df %>%
+  group_by(mstatus) %>%
+  summarize(
+    Total_Unhappy=n()
+  )
+unhappy_table
+
+happy_table <- happy_df %>%
+  group_by(mstatus) %>%
+  summarize(
+    Total_Happy=n()
+  )
+happy_table
+
+ggplot(happy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")
+ggplot(unhappy_df, aes(x=mstatus)) + geom_bar(color="blue", fill="red")
+
+mosaicplot(happy_df$happy~happy_df$mstatus, shade=TRUE, las=1)
+mosaicplot(unhappy_df$happy~unhappy_df$mstatus, shade=TRUE, las=1)
 ```
+<p>
+It would seem that there are more people married and happy than there are of any other group. Never married people also seem much happier than divorced, separated, or divorced people. </p>
+
+### Question 4
+Does party affiliation affect the relationship between happiness and marital status?
 ```{r}
-mosaicplot(isHappy_df$happy~isHappy_df$mstatus, col=c("red", "blue"))
-mosaicplot(isHappy_df$mstatus~isHappy_df$happy, col=c("red", "blue"))
+unique(happy_df$party)
+
+happy_indep_df <- happy_df %>%
+  group_by(mstatus) %>%
+  filter(party=="Independent" | party=="Ind,near rep" | party=="Ind,near dem")
+happy_indep_df
+ti1 <- happy_indep_df %>%
+  summarize(
+    Total_Happy_Indep=n()
+  )
+ti1
+
+unhappy_indep_df <- unhappy_df %>%
+  group_by(mstatus) %>%
+  filter(party=="Independent" | party=="Ind,near rep" | party=="Ind,near dem")
+unhappy_indep_df
+ti2 <- unhappy_indep_df %>%
+  summarize(
+    Total_Unhappy_Indep=n()
+  )
+ti2
+
+happy_rep_df <- happy_df %>%
+  group_by(mstatus) %>%
+  filter(party=="Strong republican" | party=="Not str republican")
+t1 <- happy_rep_df %>%
+  summarize(
+    Total_Happy_Rep=n()
+  )
+t1
+
+unhappy_rep_df <- unhappy_df %>%
+  group_by(mstatus) %>%
+  filter(party=="Strong republican" | party=="Not str republican")
+t2 <- unhappy_rep_df %>%
+  summarize(
+    Total_Unhappy_Rep=n()
+  )
+t2
+
+happy_dem_df <- happy_df %>%
+  group_by(mstatus) %>%
+  filter(party=="Strong democrat" | party=="Not str democrat")
+t3 <- happy_dem_df %>%
+  summarize(
+    Total_Happy_Rep=n()
+  )
+t3
+
+unhappy_dem_df <- unhappy_df %>%
+  group_by(mstatus) %>%
+  filter(party=="Strong democrat" | party=="Not str democrat")
+t4 <- unhappy_dem_df%>%
+  summarize(
+    Total_Unhappy_Rep=n()
+  )
+t4
+
+ggplot(happy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red")
+ggplot(unhappy_rep_df, aes(x=party)) + geom_bar(color="blue", fill="red")
+ggplot(happy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue")
+ggplot(unhappy_dem_df, aes(x=party)) + geom_bar(color="red", fill="blue")
+ggplot(happy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple")
+ggplot(unhappy_indep_df, aes(x=party)) + geom_bar(color="black", fill="purple")
 ```
 
+It would seem that there are similar amounts of happy and unhappy democrats as well as happy and unhappy republicans as well as happy and unhappy independents. This would seem to suggest party affiliation is not a factor in happy.
 
-## Problem 5
+## Question 5
+What is the relationship between martial status and education?
 ```{r}
+##creating data frame for Q5
 q5df <- as.data.frame(df)
 q5df <- filter(q5df, school != 'No answer' & school != "Don't know" & !is.na(school) & school != "NA" )
 unique(q5df$school)
 q5df$school <- as.numeric(q5df$school)
 ```
+
 
 
 ```{r}
@@ -74,7 +195,8 @@ ggplot(data=q5df, aes(x=mstatus, y=school))+geom_bar(stat = 'identity')+xlab("Ma
 
 Overall, the group of married people has the highest total amount of education, distantly followed by the never married group. Since this is the total education though, we can not tell if this is solely due to married people having more education or if there were just many more married people than other groups. This graph also shows that the total education of the No Answer group is much less than the total education for all other groups.
 
-## Problem 6A
+## Question 6A
+What is the relationship between race and education?
 ```{r}
 ##exploring relationship between race and education
 q6dfA <- select(df, race, school)
@@ -101,12 +223,10 @@ There are approximately 5 times as many white respondents as the next largest ca
 ggplot(data=q6dfA, aes(x=race, y=school))+geom_boxplot()+ggtitle("Race vs. Education")
 ```
 
-The median years of education for both black and white people is about 12 years while the median years of education for the other races is 13 years. Overall, black people tended to have lower education than white people and the other races had the widest range. This could be because the other category includes many other races like latinos and asians. 
+The median years of education for both black and white people is about 12 years while the median years of education for the other races is 13 years. Overall, black people tended to have lower education than white people and the other races had the widest range. This could be because the other category includes other races like latino and asian. 
 
-
-6b.  
-Does income affect your overall happiness?  
-The graph and data show that as a persons income increases the average happiness rating increases. For the data, i used "Not too happy" = 1, "Pretty happy" = 2, "Very happy" = 3. This allowed me to run an average of each person for each income range. Although the happiness slightly increase as income increases, we can see that they are all still right around a 2 average, which is pretty happy.
+### Question 6b
+Does income affect your overall happiness?
 
 ```{r}
 q6df <- select(df,happy, income)
@@ -114,13 +234,16 @@ q6df <- filter(q6df, happy != "No answer" & happy != "Don't know" & happy != "No
 q6df <- filter(q6df, income != "No answer" & income != "Don't know" & income != "Not applicable" & income != "Refused")
 q6df$happyNum <- recode(q6df$happy, "Not too happy" = 1, "Pretty happy" = 2, "Very happy" = 3)
 q6df <- aggregate(q6df$happyNum, by=list(q6df$income), FUN=mean)
-q6qf <- rename(q6df, Income = Group.1, Happiness = x)
+q6qf <- rename(q6df, Income = Group.1, happy = x)
 ordered <- c("Lt $1000", "$1000 to 2999", "$3000 to 3999", "$4000 to 4999", "$5000 to 5999", "$6000 to 6999", "$7000 to 7999", "$8000 to 9999", "$10000 - 14999", "$15000 - 19999", "$20000 - 24999", "$25000 or more")
 q6qf$Income <- factor(q6qf$Income, levels=ordered)
 ```
 ```{r}
-ggplot(q6qf, aes(y=Happiness, x=Income)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = -90))+ ylim(0, 3)
+ggplot(q6qf, aes(y=happy, x=Income)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = -90))+ ylim(0, 3)+xlab("Income")+ylab("Happiness")+ggtitle("Income vs. Happiness")
 ```
 ```{r}
 q6qf
 ```
+
+The graph and data show that as a persons income increases the average happy rating increases. For the data, i used "Not too happy" = 1, "Pretty happy" = 2, "Very happy" = 3. This allowed me to run an average of each person for each income range. Although the happy slightly increase as income increases, we can see that they are all still right around a 2 average, which is pretty happy.
+
